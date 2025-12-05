@@ -253,17 +253,15 @@ ul {
 }
 
 .logo-img {
-    width: 70px;   /* ose madhësia që do */
-    height: 70px;  /* ruan proporcionet */
+    margin-top: 10px;
+    width: 120px;   /* ose madhësia që do */
+    height: 120px;  /* ruan proporcionet */
     object-fit: contain;
     margin-right: 0.75rem;
 }
 
 
-.logo-text {
-    display: flex;
-    flex-direction: row;
-}
+
 
 .logo-title {
     font-family: 'Oswald', sans-serif;
@@ -1245,6 +1243,9 @@ ul {
     border-radius: 1rem;
     padding: 2rem;
 }
+
+
+
 
 .contact-form .form-row {
     display: grid;
