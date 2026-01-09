@@ -250,3 +250,33 @@ if (statsSection) {
 }
 
 console.log('Bovilla Beton website loaded successfully!');
+document.addEventListener('DOMContentLoaded', () => {
+  const slides = document.querySelectorAll('.slide');
+  let index = 0;
+
+  function updateSlides() {
+    slides.forEach(slide =>
+      slide.classList.remove('active', 'prev', 'next')
+    );
+
+    slides[index].classList.add('active');
+
+    const prev = (index - 1 + slides.length) % slides.length;
+    const next = (index + 1) % slides.length;
+
+    slides[prev].classList.add('prev');
+    slides[next].classList.add('next');
+  }
+
+  document.querySelector('.next').onclick = () => {
+    index = (index + 1) % slides.length;
+    updateSlides();
+  };
+
+  document.querySelector('.prev').onclick = () => {
+    index = (index - 1 + slides.length) % slides.length;
+    updateSlides();
+  };
+
+  updateSlides();
+});
