@@ -280,3 +280,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
   updateSlides();
 });
+
+
