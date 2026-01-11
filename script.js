@@ -281,4 +281,139 @@ document.addEventListener('DOMContentLoaded', () => {
   updateSlides();
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  const track = document.getElementById('clientsTrack');
+  if (!track) return;
 
+  // Grab original items (non-clones)
+  const originalItems = Array.from(track.children).filter(n => !n.classList.contains('clients__clone'));
+  if (originalItems.length === 0) return;
+
+  // Remove any pre-existing clones (safety)
+  track.querySelectorAll('.clients__clone').forEach(n => n.remove());
+
+  // Ensure the track contains at least two full sets of items (so translateX(-half) works)
+  // Keep cloning the original set until track.scrollWidth >= viewportWidth * 2
+  const viewport = track.parentElement;
+  const viewportWidth = () => Math.ceil(viewport.getBoundingClientRect().width);
+  const ensureDoubleSet = () => {
+    // Start by appending one clone set
+    originalItems.forEach(item => {
+      const clone = item.cloneNode(true);
+      clone.classList.add('clients__clone');
+      clone.setAttribute('aria-hidden', 'true');
+      // clear alt on clone images to avoid duplicate screen reader announcements
+      const img = clone.querySelector('img');
+      if (img) img.alt = '';
+      track.appendChild(clone);
+    });
+    // If still not wide enough, append more clones until width >= 2 * viewport
+    let safety = 0;
+    while (track.scrollWidth < viewportWidth() * 2 && safety < 10) {
+      originalItems.forEach(item => {
+        const clone = item.cloneNode(true);
+        clone.classList.add('clients__clone');
+        clone.setAttribute('aria-hidden', 'true');
+        const img = clone.querySelector('img');
+        if (img) img.alt = '';
+        track.appendChild(clone);
+      });
+      safety++;
+    }
+  };
+
+  ensureDoubleSet();
+
+  // Compute the pixel distance to scroll: width of one full set (half of track)
+  function computeScrollDistance() {
+    // We want the width of one logical set. Find first occurrence of the original sequence width.
+    // Simpler: assume track contains N items and first half equals one set.
+    const totalWidth = track.scrollWidth;
+    // If we duplicated exactly once, one set width = totalWidth / 2
+    // But because we may have appended multiple sets, find width of originalItems combined:
+    let setWidth = 0;
+    for (let i = 0; i < originalItems.length; i++) {
+      setWidth += originalItems[i].getBoundingClientRect().width;
+      // include gap between items (approx): use computed gap from CSS
+    }
+    // Fallback: if setWidth is 0 (images not loaded yet), use totalWidth / numberOfSets
+    if (!setWidth || setWidth < 1) {
+      // count how many sets are present by dividing totalWidth by viewport width approx
+      setWidth = totalWidth / Math.max(2, Math.round(totalWidth / viewportWidth()));
+    }
+    return Math.round(setWidth + (getComputedStyle(track).gap ? parseFloat(getComputedStyle(track).gap) * originalItems.length : 0));
+  }
+
+  // Wait for images to load to get accurate widths
+  const images = Array.from(track.querySelectorAll('img'));
+  const waitForImages = Promise.all(images.map(img => {
+    if (img.complete) return Promise.resolve();
+    return new Promise(res => img.addEventListener('load', res, { once: true }));
+  }));
+
+  waitForImages.then(() => {
+    const scrollDistance = computeScrollDistance();
+    // Determine duration from px-per-second variable
+    const rootStyles = getComputedStyle(document.documentElement);
+    const pxPerSecond = parseFloat(rootStyles.getPropertyValue('--base-px-per-second')) || 120;
+    const durationSeconds = Math.max(6, Math.round(scrollDistance / pxPerSecond));
+
+    // Remove any previously injected keyframes with our id
+    const styleId = 'clients-dynamic-keyframes';
+    let styleTag = document.getElementById(styleId);
+    if (styleTag) styleTag.remove();
+
+    // Create keyframes that translate by exactly -scrollDistance px
+    styleTag = document.createElement('style');
+    styleTag.id = styleId;
+    styleTag.textContent = `
+      @keyframes clients-scroll {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-${scrollDistance}px); }
+      }
+      /* apply the animation to the track */
+      #${track.id} {
+        animation: clients-scroll ${durationSeconds}s linear infinite;
+        animation-play-state: running;
+      }
+    `;
+    document.head.appendChild(styleTag);
+
+    // Recompute on resize (debounced)
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        // remove clones and rebuild to ensure correct sizing on layout change
+        track.querySelectorAll('.clients__clone').forEach(n => n.remove());
+        ensureDoubleSet();
+        // re-run this block by calling the function again
+        // (simple approach: reload page of keyframes by re-calling the same logic)
+        // For clarity, just reload the page layout by re-invoking this script block:
+        // (call compute and inject new keyframes)
+        const newScrollDistance = computeScrollDistance();
+        const newDuration = Math.max(6, Math.round(newScrollDistance / pxPerSecond));
+        styleTag.textContent = `
+          @keyframes clients-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-${newScrollDistance}px); }
+          }
+          #${track.id} {
+            animation: clients-scroll ${newDuration}s linear infinite;
+            animation-play-state: running;
+          }
+        `;
+      }, 150);
+    });
+
+    // Keyboard focus pause/resume
+    track.addEventListener('focusin', () => track.style.animationPlayState = 'paused');
+    track.addEventListener('focusout', () => track.style.animationPlayState = '');
+
+    // If user prefers reduced motion, stop animation
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mq.matches) {
+      track.style.animation = 'none';
+    }
+  });
+});

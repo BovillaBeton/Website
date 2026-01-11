@@ -1667,3 +1667,119 @@ ul {
   color: #737373;
   line-height: 1.5;
 }
+/* --- Seksioni Kryesor --- */
+.partners-section {
+    background-color: #ffffff; /* Sfond i bardhë */
+    padding: 60px 0;
+    overflow: hidden; /* Fsheh logot që dalin jashtë ekranit */
+    font-family: 'Arial', sans-serif; /* Ose fonti yt */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* --- Titulli dhe Dizajni --- */
+.section-title {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-title h2 {
+    color: #333;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+/* Vija portokalli poshtë titullit */
+.orange-divider {
+    width: 80px;
+    height: 4px;
+    background-color: #FF8C00; /* PORTOKALLI MODERN */
+    margin: 0 auto 15px auto;
+    border-radius: 2px;
+}
+
+.section-title p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+/* --- Animacioni i Logove (Slider) --- */
+.logo-slider {
+    background: white;
+    height: 100px;
+    margin: auto;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+/* Efekti "Fade" anash (bardhësi) për të dukur modern */
+.logo-slider::before,
+.logo-slider::after {
+    background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+    content: "";
+    height: 100px;
+    position: absolute;
+    width: 150px; /* Sa gjerë është zbehja */
+    z-index: 2;
+}
+
+.logo-slider::before {
+    left: 0;
+    top: 0;
+}
+
+.logo-slider::after {
+    right: 0;
+    top: 0;
+    transform: rotateZ(180deg);
+}
+
+/* Shiriti që lëviz */
+.slide-track {
+    display: flex;
+    width: calc(250px * 10); /* 250px x Numri total i logove (origjinale + dublikata) */
+    animation: scroll 30s linear infinite; /* Shpejtësia e lëvizjes */
+}
+
+/* Kutia e çdo logoje */
+.slide {
+    height: 100px;
+    width: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+.slide img {
+    max-width: 100%;
+    max-height: 80px; /* Siguron që logot të jenë në të njëjtën lartësi */
+    filter: grayscale(100%); /* I bën bardh e zi fillimisht */
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+/* Kur mausi kalon sipër, logoja bëhet me ngjyra */
+.slide img:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: scale(1.1); /* Zmadhohet pak */
+}
+
+/* --- Keyframes për lëvizjen --- */
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        /* Duhet të jetë gjysma e gjerësisë totale të slide-track */
+        /* Nëse ke 5 logo unike * 250px = 1250px, atëherë -1250px */
+        transform: translateX(calc(-250px * 5)); 
+    }
+}

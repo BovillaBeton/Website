@@ -78,13 +78,13 @@
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="hero">
+    <section id="home" class="hero" >
         <div class="hero-bg">
             <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1920&q=80" alt="Bovilla Beton - Ndërtim Profesional" class="hero-image">
             <div class="hero-overlay"></div>
         </div>
         
-        <div class="container hero-content">
+        <div class="container hero-content" style="margin-top: 90px;">
             <div class="hero-badge animate-fade-up">
                 <span class="badge-dot"></span>
                 Lider në Industrinë që nga 2005
@@ -103,7 +103,7 @@
             
             <div class="hero-buttons animate-fade-up delay-3">
                 
-                <a href="#gallery" class="btn btn-hero-outline">
+                <a href="#gallery-section" class="btn btn-hero-outline">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polygon points="5 3 19 12 5 21 5 3"/>
                     </svg>
@@ -580,7 +580,87 @@ filterBtns.forEach(function(btn) {
         </button>
         <img src="" alt="Project Preview" class="lightbox-image" id="lightboxImage">
     </div>
+    
+<section class="partners-section">
+    <style>
+        .partners-section {
+            padding: 60px 0;
+            background: #fff;
+            overflow: hidden;
+        }
 
+        .logo-slider {
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            display: grid;
+            place-items: center;
+        }
+
+        .slide-track {
+            display: flex;
+            width: calc(250px * 10);
+            animation: scroll 30s linear infinite;
+            align-items: center;
+        }
+
+        .slide {
+            width: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            /* Shtojmë transition këtu që zmadhimi të jetë i butë */
+            transition: transform 0.3s ease;
+        }
+
+        /* KJO SHTON ZOOM-IN KUR I BËN HOVER PA NDALUAR LOGOT */
+        .slide:hover {
+            transform: scale(1.1); /* Zmadhon të gjithë kutinë e logos pak */
+            z-index: 10;
+        }
+
+        .slide img {
+            width: 150px;
+            height: auto;
+            object-fit: contain;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-250px * 5)); }
+        }
+
+        /* HOVERI TANI NUK E NDALON DOT SCROLLING-UN (Kodi që e bllokonte u hoq) */
+    </style>
+
+    <div class="container">
+        <div class="section-title" style="text-align: center; margin-bottom: 30px;">
+            <h2>Partnerët Tanë</h2>
+            <div class="orange-divider" style="width: 50px; height: 3px; background: orange; margin: 10px auto;"></div>
+            <p>Besimi i ndërtuar mbi cilësi dhe bashkëpunim.</p>
+        </div>
+
+        <div class="logo-slider">
+            <div class="slide-track">
+                <div class="slide"><img src="RH-Liqeni.png" alt="Partner 1" style="width: 180px;"></div>
+                <div class="slide"><img src="partner2.jpg" alt="Partner 2"></div>
+                
+                <div class="slide"><img src="partner3.jpg" alt="Partner 3" style="transform: scale(3.5); width: 180px;"></div>
+                
+                <div class="slide"><img src="partner4.jpg" alt="Partner 4" style="transform: scale(3); width: 180px;"></div>
+                <div class="slide"><img src="partner5.jpg" alt="Partner 5" style="transform: scale(1.8); width: 180px;"></div>
+                
+                <div class="slide"><img src="RH-Liqeni.png" alt="Partner 1" style="width: 180px;"></div>
+                <div class="slide"><img src="partner2.jpg" alt="Partner 2"></div>
+                <div class="slide"><img src="partner3.jpg" alt="Partner 3" style="transform: scale(3.5); width: 180px;"></div>
+                <div class="slide"><img src="partner4.jpg" alt="Partner 4" style="transform: scale(3); width: 180px;"></div>
+                <div class="slide"><img src="partner5.jpg" alt="Partner 5" style="transform: scale(1.8); width: 180px;"></div>
+            </div>
+        </div>
+    </div>
+</section>
+    
     <!-- Testimonials Section -->
     <section class="testimonials">
         <div class="container">
