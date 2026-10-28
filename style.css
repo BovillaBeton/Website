@@ -1361,6 +1361,7 @@ ul {
     font-weight: 600;
     color: var(--foreground);
     margin-bottom: 0.25rem;
+    text-align: left;
 }
 
 .info-text {
