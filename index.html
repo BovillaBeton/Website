@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bovilla Beton - Lider në Industrinë e Betonit në Shqipëri</title>
-        <link rel="icon" type="image/png" href="images/logo.jpeg">
+        <link rel="icon" type="image/png" href="images/logo-transparent.png">
 
     <meta name="description" content="Bovilla Beton ofron beton të cilësisë së lartë dhe shërbime ndërtimi profesionale për projekte rezidenciale, komerciale dhe industriale në Shqipëri. 18+ vite eksperiencë.">
     <meta name="keywords" content="beton, ndërtim, Shqipëri, Tiranë, beton i gatshëm, furnizim betoni, kompani ndërtimi, Bovilla Beton">
@@ -28,7 +28,7 @@
     <nav class="navbar" id="navbar">
         <div class="container">
             <a href="#home" class="logo">
-    <img src="images/logo.jpeg" alt="Bovilla Beton" class="logo-img">
+    <img src="images/logo-transparent.png" alt="Bovilla Beton" class="logo-img">
 
 </a>
 
@@ -544,33 +544,38 @@
     </div>
   </div>
 </section>
-<script>const filterBtns = document.querySelectorAll('.filter-btn');
-const galleryItems = document.querySelectorAll('.gallery-item');
+<script>
+(function () {
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const galleryItems = document.querySelectorAll('.gallery-item');
+  const galleryGrid = document.querySelector('.gallery-grid');
 
-filterBtns.forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    filterBtns.forEach(function(b) {
-      b.classList.remove('active');
-    });
-    btn.classList.add('active');
+  filterBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      filterBtns.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
 
-    var filter = btn.getAttribute('data-filter');
-    var visibleIndex = 0;
-
-    galleryItems.forEach(function(item) {
-      if (item.getAttribute('data-category') === filter) {
-        item.classList.remove('hidden');
-        item.style.animation = 'none';
-        item.offsetHeight;
-        visibleIndex++;
-        item.style.animationDelay = (visibleIndex * 0.1) + 's';
-        item.style.animation = 'fadeUp 0.5s ease forwards';
-      } else {
-        item.classList.add('hidden');
+      const filter = btn.getAttribute('data-filter');
+      if (window.matchMedia('(max-width: 767px)').matches) {
+        galleryGrid.scrollTo({ left: 0, behavior: 'smooth' });
       }
+
+      let visibleIndex = 0;
+      galleryItems.forEach(function(item) {
+        if (item.getAttribute('data-category') === filter) {
+          item.classList.remove('hidden');
+          item.style.animation = 'none';
+          item.offsetHeight;
+          visibleIndex++;
+          item.style.animationDelay = (visibleIndex * 0.1) + 's';
+          item.style.animation = 'fadeUp 0.5s ease forwards';
+        } else {
+          item.classList.add('hidden');
+        }
+      });
     });
   });
-});
+})();
 </script>
 
     <!-- Lightbox -->
@@ -872,7 +877,9 @@ button#submitBtn:hover {
 @media(max-width: 600px){
   .form-row {
     flex-direction: column;
-    width:330px;
+    width:100%;
+    max-width:100%;
+    box-sizing:border-box;
   }
 }
 
@@ -881,40 +888,43 @@ button#submitBtn:hover {
 </style>
 
 <script>
-const form = document.getElementById('contactForm');
-const submitBtn = document.getElementById('submitBtn');
-const statusEl = document.getElementById('formStatus');
+(function () {
+  const form = document.getElementById('contactForm');
+  const formSubmitBtn = document.getElementById('submitBtn');
+  const statusEl = document.getElementById('formStatus');
 
-form.addEventListener('submit', async e => {
-  e.preventDefault();
-  submitBtn.disabled = true;
-  const original = submitBtn.innerHTML;
-  submitBtn.innerHTML = 'Duke dërguar...';
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    formSubmitBtn.disabled = true;
+    const original = formSubmitBtn.innerHTML;
+    formSubmitBtn.innerHTML = 'Duke dërguar...';
 
-  try {
-    const data = new FormData(form);
-    const res = await fetch(form.action, {
-      method: 'POST',
-      body: data,
-      headers: { 'Accept': 'application/json' }
-    });
+    try {
+      const data = new FormData(form);
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
 
-    if (res.ok) {
-      statusEl.textContent = 'Mesazhi u dërgua me sukses!';
-      form.reset();
-    } else {
-      const json = await res.json();
-      const error = (json && json.errors) ? json.errors.map(x => x.message).join(', ') : 'Gabim gjatë dërgimit.';
-      statusEl.textContent = '❌ ' + error;
+      if (response.ok) {
+        statusEl.textContent = 'Mesazhi u dërgua me sukses!';
+        form.reset();
+      } else {
+        const result = await response.json();
+        const error = result && result.errors
+          ? result.errors.map(item => item.message).join(', ')
+          : 'Gabim gjatë dërgimit.';
+        statusEl.textContent = '❌ ' + error;
+      }
+    } catch (error) {
+      statusEl.textContent = '❌ Gabim rrjeti. Kontrollo lidhjen.';
     }
-  } catch (err) {
-    statusEl.textContent = '❌ Gabim rrjeti. Kontrollo lidhjen.';
-  }
 
-  submitBtn.disabled = false;
-  submitBtn.innerHTML = original;
-});
-
+    formSubmitBtn.disabled = false;
+    formSubmitBtn.innerHTML = original;
+  });
+})();
 </script>
 
             </div>
@@ -1012,34 +1022,7 @@ form.addEventListener('submit', async e => {
             </div>
         </div>
     </footer>
-<script>
-const mobileBtn = document.getElementById('mobileMenuBtn');
-const mobileMenu = document.getElementById('mobileMenu');
-const navbar = document.getElementById('navbar');
 
-// Toggle Mobile Menu
-mobileBtn.addEventListener('click', () => {
-    mobileBtn.classList.toggle('active');
-    mobileMenu.classList.toggle('active');
-});
-
-// Close menu when a link is clicked
-document.querySelectorAll('.mobile-menu .nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-        mobileBtn.classList.remove('active');
-        mobileMenu.classList.remove('active');
-    });
-});
-
-// Navbar scroll effect
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 20) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
-    }
-});
-</script>
 
     <!-- Toast Notification -->
     <div class="toast" id="toast">

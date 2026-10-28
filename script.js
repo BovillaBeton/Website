@@ -4,13 +4,48 @@ const mobileMenuBtn = document.getElementById('mobileMenuBtn');
 const mobileMenu = document.getElementById('mobileMenu');
 const navLinks = document.querySelectorAll('.nav-link');
 const contactForm = document.getElementById('contactForm');
-const submitBtn = document.getElementById('submitBtn');
-const toast = document.getElementById('toast');
 const lightbox = document.getElementById('lightbox');
 const lightboxImage = document.getElementById('lightboxImage');
 const lightboxClose = document.getElementById('lightboxClose');
 const galleryItems = document.querySelectorAll('.gallery-item');
 const backToTop = document.getElementById('backToTop');
+
+// Keep the muted background video playing while the hero is visible.
+const heroVideo = document.querySelector('.hero-video');
+const heroSection = heroVideo?.closest('.hero');
+if (heroVideo && heroSection) {
+    heroVideo.muted = true;
+    heroVideo.defaultMuted = true;
+    heroVideo.playsInline = true;
+
+    let heroIsVisible = true;
+    const playHeroVideo = () => {
+        if (document.hidden || !heroIsVisible) return;
+        const playback = heroVideo.play();
+        if (playback && typeof playback.catch === 'function') playback.catch(() => {});
+    };
+
+    if ('IntersectionObserver' in window) {
+        const heroVideoObserver = new IntersectionObserver(entries => {
+            heroIsVisible = entries[0].isIntersecting;
+            if (heroIsVisible) playHeroVideo();
+            else heroVideo.pause();
+        }, { threshold: 0.01 });
+        heroVideoObserver.observe(heroSection);
+    }
+
+    heroVideo.addEventListener('pause', () => {
+        if (!document.hidden && heroIsVisible) window.setTimeout(playHeroVideo, 150);
+    });
+    heroVideo.addEventListener('canplay', playHeroVideo, { once: true });
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) heroVideo.pause();
+        else playHeroVideo();
+    });
+    window.addEventListener('pageshow', playHeroVideo);
+    document.addEventListener('touchstart', playHeroVideo, { once: true, passive: true });
+    playHeroVideo();
+}
 
 // ===== Navbar Scroll Effect =====
 window.addEventListener('scroll', () => {
@@ -50,49 +85,18 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// ===== Contact Form Submission =====
-contactForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    // Disable button and show loading state
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = `
-        <svg class="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
-        </svg>
-        Duke Dërguar...
-    `;
-    
-    // Simulate form submission (replace with actual form handling)
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Show success toast
-    showToast();
-    
-    // Reset form
-    contactForm.reset();
-    
-    // Reset button
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>
-        </svg>
-        Dërgo Mesazhin
-    `;
-});
-
-// ===== Toast Notification =====
-function showToast() {
-    toast.classList.add('active');
-    setTimeout(() => {
-        toast.classList.remove('active');
-    }, 5000);
-}
-
 // ===== Gallery Lightbox =====
+const isTouchGallery = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
 galleryItems.forEach(item => {
     item.addEventListener('click', () => {
+        if (isTouchGallery) {
+            const wasOpen = item.classList.contains('info-open');
+            galleryItems.forEach(galleryItem => galleryItem.classList.remove('info-open'));
+            if (!wasOpen) item.classList.add('info-open');
+            return;
+        }
+
         const img = item.querySelector('img');
         lightboxImage.src = img.src;
         lightboxImage.alt = img.alt;
@@ -203,12 +207,11 @@ function animateCounters() {
         const target = counter.innerText;
         const isPercentage = target.includes('%');
         const isPlus = target.includes('+');
-        const isSlash = target.includes('/');
-        
-        // Skip if not a number
-        if (isSlash) return;
-        
-        const number = parseInt(target.replace(/[^0-9]/g, ''));
+        const slashParts = target.split('/');
+        const hasSlash = slashParts.length === 2;
+        const suffix = hasSlash ? '/' + slashParts[1] : '';
+        const numberText = hasSlash ? slashParts[0] : target;
+        const number = parseInt(numberText.replace(/[^0-9]/g, ''));
         
         if (isNaN(number)) return;
         
@@ -229,7 +232,7 @@ function animateCounters() {
                 displayValue = displayValue.toLocaleString();
             }
             
-            counter.innerText = displayValue + (isPlus ? '+' : '') + (isPercentage ? '%' : '');
+            counter.innerText = displayValue + suffix + (isPlus ? '+' : '') + (isPercentage ? '%' : '');
         }, stepTime);
     });
 }

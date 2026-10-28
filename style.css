@@ -252,10 +252,14 @@ ul {
     color: var(--muted-foreground);
 }
 
+.navbar .logo {
+    display: flex;
+    align-items: center;
+}
+
 .logo-img {
-    margin-top: 10px;
-    width: 120px;   /* ose madhësia që do */
-    height: 120px;  /* ruan proporcionet */
+    width: 72px;
+    height: 64px;
     object-fit: contain;
     margin-right: 0.75rem;
 }
@@ -433,7 +437,7 @@ ul {
     position: absolute !important;
     inset: 0 !important;
     display: block;
-    width: 100% !important;
+    width: 100%;
     height: 100% !important;
     min-width: 100%;
     min-height: 100%;
@@ -446,6 +450,7 @@ ul {
 @media (max-width: 767px) {
     .hero-video {
         transform: scale(1) !important;
+        filter: none;
     }
 }
 
@@ -453,6 +458,12 @@ ul {
     position: absolute;
     inset: 0;
     background: linear-gradient(135deg, rgba(31, 31, 31, 0.95) 0%, rgba(31, 31, 31, 0.6) 100%);
+}
+
+@media (max-width: 767px) {
+    .hero-overlay {
+        background: linear-gradient(135deg, rgba(31, 31, 31, 0.65) 0%, rgba(31, 31, 31, 0.3) 100%);
+    }
 }
 
 .hero-content {
@@ -1320,11 +1331,17 @@ ul {
 
 .info-card {
     display: flex;
-    gap: 1rem;
-    padding: 1.25rem;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
     background-color: var(--background);
     border: 1px solid var(--border);
     border-radius: 0.75rem;
+}
+
+.info-card > div:last-child {
+    flex: 1;
+    min-width: 0;
 }
 
 .info-icon {
@@ -1828,4 +1845,98 @@ ul {
         max-width: 360px;
         scroll-snap-align: start;
     }
+}
+
+/* Phone layout improvements */
+@media (max-width: 767px) {
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: clip;
+    }
+
+    .contact-grid > *,
+    .contact-form-wrapper,
+    #contactForm {
+        min-width: 0;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .form-row {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    #contactForm input,
+    #contactForm textarea {
+        box-sizing: border-box;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.25rem;
+    }
+
+    .stat-card {
+        padding: 0.5rem 0.125rem;
+    }
+
+    .stat-card .stat-icon {
+        width: 2rem;
+        height: 2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .stat-card .stat-value {
+        font-size: clamp(1rem, 4.2vw, 1.25rem);
+    }
+
+    .stat-card .stat-label {
+        font-size: 0.75rem;
+        line-height: 1.15;
+        overflow-wrap: anywhere;
+    }
+
+    .stat-card .stat-desc {
+        display: none;
+    }
+
+    .gallery-grid {
+        display: flex;
+        width: 100%;
+        gap: 1rem;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-bottom: 0.5rem;
+        scroll-snap-type: x mandatory;
+        scroll-padding-inline: 0;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .gallery-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .gallery-grid .gallery-item:not(.hidden) {
+        flex: 0 0 85%;
+        max-width: 360px;
+        scroll-snap-align: start;
+    }
+}
+
+/* Reveal gallery details on touch instead of opening the lightbox */
+.gallery-item.info-open .gallery-overlay {
+    opacity: 1;
+}
+
+.gallery-item.info-open .gallery-content {
+    transform: translateY(0);
+    opacity: 1;
 }
