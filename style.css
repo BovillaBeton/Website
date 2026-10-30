@@ -1746,7 +1746,7 @@ ul {
 /* --- Animacioni i Logove (Slider) --- */
 .logo-slider {
     background: white;
-    height: 100px;
+    height: 120px;
     margin: auto;
     overflow: hidden;
     position: relative;
@@ -1758,7 +1758,7 @@ ul {
 .logo-slider::after {
     background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
     content: "";
-    height: 100px;
+    height: 120px;
     position: absolute;
     width: 150px; /* Sa gjerë është zbehja */
     z-index: 2;
@@ -1778,13 +1778,13 @@ ul {
 /* Shiriti që lëviz */
 .slide-track {
     display: flex;
-    width: calc(250px * 10); /* 250px x Numri total i logove (origjinale + dublikata) */
+    width: calc(250px * 16); /* 250px x Numri total i logove (origjinale + dublikata) */
     animation: scroll 30s linear infinite; /* Shpejtësia e lëvizjes */
 }
 
 /* Kutia e çdo logoje */
 .slide {
-    height: 100px;
+    height: 120px;
     width: 250px;
     display: flex;
     align-items: center;
@@ -1794,10 +1794,22 @@ ul {
 
 .slide img {
     max-width: 100%;
-    max-height: 80px; /* Siguron që logot të jenë në të njëjtën lartësi */
+    max-height: 88px; /* Siguron që logot të jenë në të njëjtën lartësi */
     filter: grayscale(100%); /* I bën bardh e zi fillimisht */
     opacity: 0.7;
     transition: all 0.3s ease;
+}
+
+.logo-slider .slide:nth-child(5) img,
+.logo-slider .slide:nth-child(13) img {
+    position: relative;
+    left: 8px;
+}
+
+.logo-slider .slide:nth-child(7) img,
+.logo-slider .slide:nth-child(15) img {
+    position: relative;
+    left: -8px;
 }
 
 /* Kur mausi kalon sipër, logoja bëhet me ngjyra */
@@ -1814,10 +1826,11 @@ ul {
     }
     100% {
         /* Duhet të jetë gjysma e gjerësisë totale të slide-track */
-        /* Nëse ke 5 logo unike * 250px = 1250px, atëherë -1250px */
-        transform: translateX(calc(-250px * 5)); 
+        /* Me 8 logo unike * 250px = 2000px */
+        transform: translateX(calc(-250px * 8));
     }
 }
+
 /* Swipeable service cards on phones */
 @media (max-width: 767px) {
     .services {

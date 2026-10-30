@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 410" role="img" aria-labelledby="title">
+  <title id="title">Kotarja Ndertim logo</title>
+  <g fill="none" stroke-linecap="butt" stroke-linejoin="round">
+    <!-- Three sweeping bands that fold into the K mark -->
+    <path d="M232 10H382L216 177Q194 199 216 222L291 297H248L179 228Q148 197 179 166Z" stroke="#2d2825" stroke-width="36"/>
+    <path d="M181 10H331L165 177Q143 199 165 222L240 297H197L128 228Q97 197 128 166Z" stroke="#2d2825" stroke-width="36"/>
+    <path d="M130 10H280L114 177Q92 199 114 222L189 297H146L77 228Q46 197 77 166Z" stroke="#2d2825" stroke-width="36"/>
+    <!-- Light channels between the bands -->
+    <path d="M232 10H382L216 177Q194 199 216 222L291 297" stroke="#e8dfc5" stroke-width="12"/>
+    <path d="M181 10H331L165 177Q143 199 165 222L240 297" stroke="#e8dfc5" stroke-width="12"/>
+  </g>
+  <text x="210" y="345" text-anchor="middle" fill="#2d2825" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="800" letter-spacing="1">KOTARJA</text>
+  <text x="210" y="382" text-anchor="middle" fill="#2d2825" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="800" letter-spacing="1.5">NDERTIM</text>
+</svg>
